@@ -2,13 +2,19 @@ import AppKit
 import SwiftUI
 
 enum VoleraPalette {
-    static let charcoal = Color(red: 0.07, green: 0.08, blue: 0.10)
-    static let charcoalLift = Color(red: 0.12, green: 0.14, blue: 0.17)
-    static let panel = Color(red: 0.14, green: 0.16, blue: 0.19).opacity(0.72)
-    static let panelStroke = Color.white.opacity(0.08)
-    static let icyBlue = Color(red: 0.55, green: 0.80, blue: 0.96)
-    static let mist = Color.white.opacity(0.72)
-    static let secondaryText = Color.white.opacity(0.46)
+    static let charcoal = Color(red: 0.05, green: 0.06, blue: 0.08)
+    static let charcoalLift = Color(red: 0.10, green: 0.12, blue: 0.15)
+    static let panel = Color(red: 0.12, green: 0.14, blue: 0.18).opacity(0.65)
+    static let panelStroke = Color.white.opacity(0.12)
+    static let icyBlue = Color(red: 0.45, green: 0.75, blue: 1.0)
+    static let icyBlueGlow = Color(red: 0.45, green: 0.75, blue: 1.0).opacity(0.15)
+    static let mist = Color.white.opacity(0.85)
+    static let secondaryText = Color.white.opacity(0.55)
+    
+    // Design System
+    static let cornerRadius: CGFloat = 16
+    static let cardCornerRadius: CGFloat = 24
+    static let glassBlur: CGFloat = 20
 }
 
 struct CodableColor: Codable, Equatable, Hashable {

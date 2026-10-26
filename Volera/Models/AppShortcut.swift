@@ -7,19 +7,22 @@ struct AppShortcut: Identifiable, Codable, Equatable, Hashable {
     var bundleIdentifier: String?
     var path: String?
     var bookmarkData: Data?
+    var iconName: String? // Optional system icon name
 
     init(
         id: UUID = UUID(),
         name: String,
         bundleIdentifier: String? = nil,
         path: String? = nil,
-        bookmarkData: Data? = nil
+        bookmarkData: Data? = nil,
+        iconName: String? = nil
     ) {
         self.id = id
         self.name = name
         self.bundleIdentifier = bundleIdentifier
         self.path = path
         self.bookmarkData = bookmarkData
+        self.iconName = iconName
     }
 
     init?(url: URL) {
@@ -66,6 +69,13 @@ struct AppShortcut: Identifiable, Codable, Equatable, Hashable {
             return URL(fileURLWithPath: path)
         }
 
+        return nil
+    }
+
+    func icon() -> NSImage? {
+        if let url = resolvedURL() {
+            return NSWorkspace.shared.icon(forFile: url.path)
+        }
         return nil
     }
 }

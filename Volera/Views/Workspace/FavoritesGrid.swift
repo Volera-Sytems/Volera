@@ -7,22 +7,23 @@ struct FavoritesGrid: View {
     var onOpenSettings: () -> Void
 
     private let columns = [
-        GridItem(.adaptive(minimum: 132, maximum: 148), spacing: 16)
+        GridItem(.adaptive(minimum: 140, maximum: 160), spacing: 24)
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(spacing: 10) {
-                Text("Favorites")
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.82))
-                    .tracking(1.2)
+        VStack(alignment: .leading, spacing: 24) {
+            HStack(spacing: 12) {
+                Text("Workspace")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.9))
+                    .tracking(1.5)
                     .textCase(.uppercase)
 
                 Capsule()
-                    .fill(accent.opacity(0.7))
-                    .frame(width: 28, height: 2)
+                    .fill(accent.opacity(0.8))
+                    .frame(width: 32, height: 3)
             }
+            .padding(.leading, 4)
 
             if shortcuts.isEmpty {
                 EmptyFavoritesView(accent: accent, onOpenSettings: onOpenSettings)
