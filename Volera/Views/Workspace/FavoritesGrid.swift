@@ -7,11 +7,11 @@ struct FavoritesGrid: View {
     var onOpenSettings: () -> Void
 
     private let columns = [
-        GridItem(.adaptive(minimum: 140, maximum: 160), spacing: 24)
+        GridItem(.adaptive(minimum: 160, maximum: 180), spacing: 32)
     ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 32) {
             HStack(spacing: 12) {
                 Text("Workspace")
                     .font(.system(size: 16, weight: .bold, design: .rounded))

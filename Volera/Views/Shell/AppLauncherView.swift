@@ -45,84 +45,103 @@ struct AppLauncherView: View {
     var body: some View {
         ZStack {
             // Backdrop
-            Color.black.opacity(0.4)
+            Color.black.opacity(0.5)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    withAnimation(.spring()) {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                         isPresented = false
                     }
                 }
             
-            VStack(spacing: 24) {
+            VStack(spacing: 32) {
                 // Search Bar
-                HStack {
+                HStack(spacing: 16) {
                     Image(systemName: "magnifyingglass")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
+                        .font(.title)
+                        .foregroundStyle(store.accentColor)
                     
                     TextField("Search applications...", text: $searchText)
                         .textFieldStyle(.plain)
                         .font(.title2)
                 }
-                .padding(16)
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding(.horizontal, 24)
+                .padding(.vertical, 18)
+                .background(.ultraThinMaterial.opacity(0.8))
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(store.accentColor.opacity(0.5), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
                 )
-                .frame(maxWidth: 600)
+                .frame(maxWidth: 700)
+                .shadow(color: .black.opacity(0.3), radius: 20, x: 0, y: 10)
                 
                 // Apps Grid
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 100, maximum: 120), spacing: 20)], spacing: 24) {
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 120, maximum: 140), spacing: 32)], spacing: 40) {
                         ForEach(filteredApps) { app in
-                            VStack(spacing: 8) {
-                                if let nsImage = app.icon() {
-                                    Image(nsImage: nsImage)
-                                        .resizable()
-                                        .frame(width: 60, height: 60)
-                                        .padding(10)
-                                        .background(.ultraThinMaterial)
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                } else if let icon = app.iconName {
-                                    Image(systemName: icon)
-                                        .font(.system(size: 40))
-                                        .frame(width: 80, height: 80)
-                                        .background(.ultraThinMaterial)
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                } else {
-                                    Image(systemName: "app.fill")
-                                        .font(.system(size: 40))
-                                        .frame(width: 80, height: 80)
-                                        .background(.ultraThinMaterial)
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                }
-                                
-                                Text(app.name)
-                                    .font(.caption)
-                                    .multilineTextAlignment(.center)
-                                    .lineLimit(2)
-                                    .foregroundStyle(.white)
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
+                            AppLauncherItem(app: app, accent: store.accentColor) {
                                 store.openShortcut(app)
-                                withAnimation(.spring()) {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                     isPresented = false
                                 }
                             }
                         }
                     }
-                    .padding(40)
+                    .padding(60)
                 }
             }
-            .padding(.top, 100)
-            .padding(.horizontal, 40)
+            .padding(.top, 120)
+            .padding(.horizontal, 60)
         }
         .onAppear {
             fetchApps()
         }
-        .transition(.opacity.combined(with: .scale(scale: 0.95)))
+        .transition(.opacity.combined(with: .scale(scale: 0.98)))
+    }
+}
+
+struct AppLauncherItem: View {
+    let app: AppShortcut
+    let accent: Color
+    var action: () -> Void
+    
+    @State private var isHovering = false
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 12) {
+                if let nsImage = app.icon() {
+                    Image(nsImage: nsImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 72, height: 72)
+                        .padding(12)
+                        .background(.ultraThinMaterial.opacity(isHovering ? 0.3 : 0.15))
+                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .shadow(color: isHovering ? accent.opacity(0.3) : .clear, radius: 15)
+                } else {
+                    Image(systemName: "app.fill")
+                        .font(.system(size: 48))
+                        .frame(width: 96, height: 96)
+                        .background(.ultraThinMaterial.opacity(isHovering ? 0.3 : 0.15))
+                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .foregroundStyle(isHovering ? accent : .white.opacity(0.8))
+                }
+                
+                Text(app.name)
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .foregroundStyle(isHovering ? .white : .white.opacity(0.8))
+                    .frame(height: 32, alignment: .top)
+            }
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                isHovering = hovering
+            }
+        }
+        .scaleEffect(isHovering ? 1.1 : 1.0)
     }
 }

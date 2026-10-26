@@ -21,7 +21,7 @@ struct DesktopShellView: View {
             // 2. Desktop Workspace
             VStack(spacing: 0) {
                 // Top margin for status bar
-                Color.clear.frame(height: 48)
+                Color.clear.frame(height: 60)
                 
                 Spacer()
                 
@@ -32,7 +32,8 @@ struct DesktopShellView: View {
                         showDate: store.preferences.showDate,
                         accent: store.accentColor
                     )
-                    .padding(.bottom, 20)
+                    .scaleEffect(1.1)
+                    .padding(.bottom, 30)
                     .transition(.opacity.combined(with: .move(edge: .top)))
                 }
                 
@@ -56,7 +57,7 @@ struct DesktopShellView: View {
                 Spacer()
                 
                 // Bottom margin for dock
-                Color.clear.frame(height: 100)
+                Color.clear.frame(height: 120)
             }
             
             // 3. Status Bar
@@ -81,7 +82,7 @@ struct DesktopShellView: View {
                         }
                     }
                 )
-                .padding(.bottom, 24)
+                .padding(.bottom, 32)
             }
             
             // 5. App Launcher Overlay
@@ -129,13 +130,27 @@ struct DesktopShellView: View {
                 .zIndex(200)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .voleraToggleSettings)) { _ in
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                showingSettings = true
-            }
+        .onReceive(NotificationCenter.default.publisher(for: .voleraEscapePressed)) { _ in
+            handleEscape()
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             isAppActive = newPhase == .active
+        }
+    }
+    
+    private func handleEscape() {
+        if showingSettings {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                showingSettings = false
+            }
+        } else if isLauncherPresented {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                isLauncherPresented = false
+            }
+        } else {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                showingSettings = true
+            }
         }
     }
 }

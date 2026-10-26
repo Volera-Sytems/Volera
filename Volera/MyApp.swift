@@ -26,27 +26,43 @@ struct MyApp: App {
             window.titlebarAppearsTransparent = true
             window.titleVisibility = .hidden
             window.backgroundColor = .black
-            window.isMovableByWindowBackground = true
+            window.isMovableByWindowBackground = false
             
-            // Persistent full-screen behavior
-            window.collectionBehavior = [.fullScreenPrimary, .managed]
+            // Shared-Space Desktop Architecture
+            // Use a borderless window that fills the screen without native full-screen
+            window.styleMask = [.borderless, .fullSizeContentView]
+            window.collectionBehavior = [.managed]
+            window.level = .normal // Stays in the managed Space
             
-            if !window.styleMask.contains(.fullScreen) {
-                window.toggleFullScreen(nil)
+            // Size to the primary display
+            updateWindowFrame(window)
+            
+            // Configure macOS presentation options to hide system UI while Volera is active
+            NSApp.presentationOptions = [.autoHideDock, .autoHideMenuBar]
+            
+            // Update frame on screen changes
+            NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { _ in
+                self.updateWindowFrame(window)
             }
             
-            // Prevent Escape from exiting full-screen
+            // Contextual Escape handling
             NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
                 if event.keyCode == 53 { // Escape key
-                    NotificationCenter.default.post(name: .voleraToggleSettings, object: nil)
+                    NotificationCenter.default.post(name: .voleraEscapePressed, object: nil)
                     return nil // Consume the event
                 }
                 return event
             }
         }
     }
+    
+    private func updateWindowFrame(_ window: NSWindow) {
+        if let screen = NSScreen.main {
+            window.setFrame(screen.frame, display: true)
+        }
+    }
 }
 
 extension Notification.Name {
-    static let voleraToggleSettings = Notification.Name("voleraToggleSettings")
+    static let voleraEscapePressed = Notification.Name("voleraEscapePressed")
 }

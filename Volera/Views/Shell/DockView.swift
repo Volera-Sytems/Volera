@@ -8,16 +8,16 @@ struct DockView: View {
     var onOpenSettings: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 16) {
             // Launcher Button
             DockItem(icon: "square.grid.2x2.fill", label: "Launcher", accent: store.accentColor) {
                 onOpenLauncher()
             }
             
             Rectangle()
-                .fill(Color.white.opacity(0.1))
-                .frame(width: 1, height: 32)
-                .padding(.horizontal, 4)
+                .fill(Color.white.opacity(0.12))
+                .frame(width: 1, height: 36)
+                .padding(.horizontal, 6)
             
             ForEach(pinnedApps) { shortcut in
                 DockItem(shortcut: shortcut, accent: store.accentColor) {
@@ -26,24 +26,24 @@ struct DockView: View {
             }
             
             Rectangle()
-                .fill(Color.white.opacity(0.1))
-                .frame(width: 1, height: 32)
-                .padding(.horizontal, 4)
+                .fill(Color.white.opacity(0.12))
+                .frame(width: 1, height: 36)
+                .padding(.horizontal, 6)
             
             // Settings Button
             DockItem(icon: "gearshape.fill", label: "Settings", accent: store.accentColor) {
                 onOpenSettings()
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(.ultraThinMaterial.opacity(0.8))
-        .clipShape(RoundedRectangle(cornerRadius: VoleraPalette.cardCornerRadius, style: .continuous))
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial.opacity(0.85))
+        .clipShape(RoundedRectangle(cornerRadius: VoleraPalette.cardCornerRadius + 4, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: VoleraPalette.cardCornerRadius, style: .continuous)
-                .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
+            RoundedRectangle(cornerRadius: VoleraPalette.cardCornerRadius + 4, style: .continuous)
+                .stroke(Color.white.opacity(0.15), lineWidth: 0.5)
         )
-        .shadow(color: .black.opacity(0.4), radius: 25, x: 0, y: 15)
+        .shadow(color: .black.opacity(0.45), radius: 30, x: 0, y: 18)
     }
 }
 
@@ -76,9 +76,9 @@ struct DockItem: View {
         Button(action: action) {
             ZStack {
                 if isHovering {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(Color.white.opacity(0.1))
-                        .frame(width: 52, height: 52)
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(Color.white.opacity(0.12))
+                        .frame(width: 64, height: 64)
                         .transition(.scale.combined(with: .opacity))
                 }
                 
@@ -88,20 +88,20 @@ struct DockItem: View {
                             Image(nsImage: nsImage)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 42, height: 42)
-                                .shadow(color: isHovering ? accent.opacity(0.3) : .clear, radius: 10)
+                                .frame(width: 48, height: 48)
+                                .shadow(color: isHovering ? accent.opacity(0.35) : .clear, radius: 12)
                         } else {
                             Image(systemName: "app.fill")
-                                .font(.system(size: 26))
-                                .foregroundStyle(isHovering ? accent : .white.opacity(0.9))
+                                .font(.system(size: 30))
+                                .foregroundStyle(isHovering ? accent : .white.opacity(0.95))
                         }
                     } else if let icon = icon {
                         Image(systemName: icon)
-                            .font(.system(size: 24))
-                            .foregroundStyle(isHovering ? accent : .white.opacity(0.9))
+                            .font(.system(size: 28))
+                            .foregroundStyle(isHovering ? accent : .white.opacity(0.95))
                     }
                 }
-                .frame(width: 52, height: 52)
+                .frame(width: 64, height: 64)
             }
         }
         .buttonStyle(.plain)
