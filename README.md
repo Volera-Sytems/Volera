@@ -9,11 +9,3 @@ To keep the macOS Dock hidden while other applications are active, press **Optio
 The manual Dock setting is system-wide for the logged-in user and may apply on other desktops. Volera cannot scope it to a Space or control the Dock while another application is active through AppKit presentation options.
 
 The former Dock preference helper source remains in the project for reference, but it is not embedded in or required by the VoleraDock app scheme.
-
-## Build
-
-Open `VoleraDock.xcodeproj` in Xcode and build the **VoleraDock** scheme, or run:
-
-```sh
-xcodebuild -project VoleraDock.xcodeproj -scheme VoleraDock -configuration Debug build
-```
